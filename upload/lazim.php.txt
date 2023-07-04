@@ -1,0 +1,93 @@
+<?php include("admin/include/site_db.php"); ?> <!doctype html>
+
+<?php
+        if($db->veriSaydir("slayt", array(), array()) > 0) {
+        $bilgi= $db->VeriOkuCoklu("slayt", array(), array(), "row", "ASC");
+        $bilgial= $db->bilgial;
+        foreach($bilgial as $rows){
+        ?>
+
+
+  <?php }} ?>
+  
+
+  <?=$db->VeriOkuTek("products_category", "isim", "id", $db->VeriOkuTek("products_items", "cat_id", "url", $_GET["url"]));?> // kategori verisi
+
+  <?=$rows->baslik;?>
+
+  
+  
+  				<?php
+								$cat_id = $db->VeriOkuTek("urunler_category", "id", "url", $_GET["url"]);
+								if($db->veriSaydir("urunler_items", array(), array()) > 0) {
+								$bilgi= $db->VeriOkuCoklu("urunler_items", array("cat_id"), array($cat_id), "row", "ASC");
+								$bilgial= $db->bilgial;
+								foreach($bilgial as $rows){
+								?>
+
+								
+                        <div class="small-thumb">
+                        	<img src="upload/<?=$rows->resim;?>" class="img-responsive" alt="single-product">
+                        </div>
+                      <?php }} ?>
+
+					  
+					  
+  kurumsal-<?=$rows->url;?>.html
+
+  <?=substr($db->ayarlar("value" , "adres"),0,100);?>
+  <?=$db->ayarlar("value" , "adres");?>
+
+  <?=$db->VeriOkuTek("blog", "isim", "url", $_GET["url"]);?>
+
+  <?=substr($rows->aciklama,0,100);?>
+  
+  <?=substr($db->VeriOkuTek("kurumsal", "aciklama","url", "hakkimizda"),0,267);?>
+  
+  <?php  include("admin/include/site_db.php");
+
+$sayfada = 6;
+$toplam_icerik = $db->VeriSaydir("etkinlikler");
+$toplam_sayfa = ceil($toplam_icerik / $sayfada);
+$sayfa = isset($_GET['sayfa']) ? (int) $_GET['sayfa'] : 1;
+if($sayfa < 1) $sayfa = 1;
+if($sayfa > $toplam_sayfa) $sayfa = $toplam_sayfa;
+
+
+?>
+													<?php
+														if($db->veriSaydir("etkinlikler", array(), array()) > 0) {
+														$limit = ($sayfa - 1) * $sayfada;
+														$bilgi= $db->VeriOkuCoklu("etkinlikler", array(), array(), "row", "DESC",$limit .', '. $sayfada);
+														$bilgial= $db->bilgial;
+														foreach($bilgial as $rows){
+														 ?>
+														 
+														 
+														 
+															<?php
+																	$sayfa_goster = 4; // gösterilecek sayfa sayısı
+																	$en_az_orta = ceil($sayfa_goster/2);
+																	$en_fazla_orta = ($toplam_sayfa+1) - $en_az_orta;
+																	$sayfa_orta = $sayfa;
+																	if($sayfa_orta < $en_az_orta) $sayfa_orta = $en_az_orta;
+																	if($sayfa_orta > $en_fazla_orta) $sayfa_orta = $en_fazla_orta;
+																	$sol_sayfalar = round($sayfa_orta - (($sayfa_goster-1) / 2));
+																	$sag_sayfalar = round((($sayfa_goster-1) / 2) + $sayfa_orta);
+																	if($sol_sayfalar < 1) $sol_sayfalar = 1;
+																	if($sag_sayfalar > $toplam_sayfa) $sag_sayfalar = $toplam_sayfa;
+
+																	if($sayfa != 1) echo '<li><a class="first" href="?sayfa=1"><i class="fa fa-angle-left"></i></a></li> ';
+																	if($sayfa != 1) echo ' <li><a class="last" href="?sayfa='.($sayfa-1).'"><i class="fa fa-angle-right"></i></a></li> ';
+
+																	for($s = $sol_sayfalar; $s <= $sag_sayfalar; $s++) {
+																		if($sayfa == $s) {
+																			echo '<li><a href="#" class="m-active">' . $s . '</a></li>';
+																		} else {
+																		echo '<li><a class="tran3s" href="?sayfa='.$s.'">'.$s.'</a></li>';
+																		}
+																	}
+
+																	if($sayfa != $toplam_sayfa) echo ' <li><a href="?sayfa='.($sayfa+1).'"><i class="fa fa-angle-left"></i></a></li> ';
+																	if($sayfa != $toplam_sayfa) echo ' <li><a href="?sayfa='.$toplam_sayfa.'"><i class="fa fa-angle-right"></i></a></li>';
+																	?>
